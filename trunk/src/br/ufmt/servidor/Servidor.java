@@ -62,10 +62,13 @@ class TrataCliente extends Thread {
         try {
             // aqui vai a sua comunicacao com o cliente
             ObjectInputStream oi = new ObjectInputStream(client.getInputStream());
-
+            
+            
             // exibindo na tela o que recebemos do nosso cliente
-            System.out.println("Chegou isso:" + oi.readObject());
-
+            Object ob = oi.readObject();
+            System.out.println("Chegou isso:" + ob );
+             System.out.println(ob.getClass().getName());
+            
             client.close();
 
         } catch (Exception e) {

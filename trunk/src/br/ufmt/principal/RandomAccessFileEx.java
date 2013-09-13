@@ -1,3 +1,4 @@
+package br.ufmt.principal;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,14 +8,14 @@ import java.io.RandomAccessFile;
 
 public class RandomAccessFileEx {
 
-	static final String FILEPATH = "D:\\Koi Boudou.mp3";
+	static final String FILEPATH = "D:\\NotasMD.pdf";
 	static File  arquivo= new File(FILEPATH);
 	static final String FILEPATH2 = "D:\\outro.mp3";
 	static int tamanho = (int)arquivo.length();
 	static int cont =0;
 	public static void main(String[] args) {
 
-		try {
+/*		try {
 		
 			while(cont < tamanho){
 				byte[]b = readFromFile(FILEPATH, cont,1024);
@@ -26,11 +27,13 @@ public class RandomAccessFileEx {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+		
+		System.out.println(tamanho);
 
 	}
 
-	private static byte[] readFromFile(String filePath, int position, int size)
+	 static byte[] readFromFile(String filePath, int position, int size)
 			throws IOException {
 
 		RandomAccessFile file = new RandomAccessFile(filePath, "r");
@@ -42,7 +45,7 @@ public class RandomAccessFileEx {
 
 	}
 
-	private static void writeToFile(String filePath, byte[] data, int position)
+ static void writeToFile(String filePath, byte[] data, int position)
 			throws IOException {
 
 		RandomAccessFile file = new RandomAccessFile(filePath, "rw");

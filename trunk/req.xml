@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<solicitacao>
+    <requisita>
+        <nome>teste.pdf</nome>
+        <posicao>0</posicao>
+        <tamanho>1024</tamanho>
+    </requisita>
+    <requisita>
+        <nome>teste2.pdf</nome>
+        <posicao>1024</posicao>
+        <tamanho>2048</tamanho>
+    </requisita>
+</solicitacao>
