@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="solicitacao" type="solicitaPublicacao"/>
+
+  <xs:complexType name="publica">
+    <xs:sequence>
+      <xs:element name="nome" type="xs:string" minOccurs="0"/>
+      <xs:element name="md5" type="xs:string" minOccurs="0"/>
+      <xs:element name="tamanho" type="xs:int"/>
+      <xs:element name="ip" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="solicitaPublicacao">
+    <xs:sequence>
+      <xs:element name="publica" type="publica" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
