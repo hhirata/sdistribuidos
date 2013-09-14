@@ -31,7 +31,7 @@ public class TrataXMLReq {
 		SolicitaArquivo sl = new SolicitaArquivo();
 		sl.setRequisita(req);
 		StringWriter saida = new StringWriter();
-		JAXBContext context = JAXBContext.newInstance("br.ufmt.principal");
+		JAXBContext context = JAXBContext.newInstance("br.ufmt.requisicao");
 		JAXBElement<SolicitaArquivo> element = obj.createSolicitacao(sl);
 		Marshaller marshaller = context.createMarshaller();
 		marshaller.setProperty("jaxb.formatted.output",Boolean.TRUE);
