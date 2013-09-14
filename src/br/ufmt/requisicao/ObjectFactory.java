@@ -6,7 +6,7 @@
 //
 
 
-package br.ufmt.principal;
+package br.ufmt.requisicao;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;

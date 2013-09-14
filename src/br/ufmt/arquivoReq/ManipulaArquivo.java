@@ -1,4 +1,4 @@
-package br.ufmt.principal;
+package br.ufmt.arquivoReq;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,6 +64,16 @@ public class ManipulaArquivo implements Runnable {
 	public void setPosition(int position) {
 		this.position = position;
 	}
+
+	
+	
+	public ManipulaArquivo(byte[] data, int position, RandomAccessFile file) {
+		super();
+		this.data = data;
+		this.position = position;
+		this.file = file;
+	}
+
 
 	@Override
 	public void run() {

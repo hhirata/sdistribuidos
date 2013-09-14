@@ -9,6 +9,8 @@ import java.net.Socket;
 
 import javax.xml.bind.JAXBException;
 
+import br.ufmt.requisicao.TrataXMLReq;
+
 public class TrataReqCliente implements Runnable{
 
 	private Socket cliente;
@@ -19,7 +21,7 @@ public class TrataReqCliente implements Runnable{
 			Object obj = oi.readObject();
 			if(obj instanceof String){
 				try {
-					byte[] parte = new TrataXML().parteArquivo((String)obj,caminho);
+					byte[] parte = new TrataXMLReq().parteArquivo((String)obj,caminho);
 					DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
 /*					Conteudo ctd = new Conteudo();
 					ctd.setCtd(parte);

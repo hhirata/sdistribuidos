@@ -1,15 +1,18 @@
-package br.ufmt.principal;
+package br.ufmt.requisicao;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-public class TrataXML {
+import br.ufmt.arquivoReq.RandomAccessFileEx;
+
+public class TrataXMLReq {
 
 	public byte[] parteArquivo(String req, String caminho) throws JAXBException, IOException{
 
@@ -19,7 +22,7 @@ public class TrataXML {
 				(JAXBElement<SolicitaArquivo>)unmarshaller.unmarshal(new ByteArrayInputStream(req.getBytes()));
 		SolicitaArquivo rqObj = unmarshalledObject.getValue();
 		RequisitaArquivo arq = rqObj.getRequisita();
-		return RandomAccessFileEx.readFromFile(caminho+arq.getNome(),arq.getPosicao(),arq.getTamanho());
+		return new RandomAccessFileEx().readFromFile(caminho+arq.getNome(),arq.getPosicao(),arq.getTamanho());
 
 	}
 

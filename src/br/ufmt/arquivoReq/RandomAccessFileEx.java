@@ -1,4 +1,4 @@
-package br.ufmt.principal;
+package br.ufmt.arquivoReq;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +34,7 @@ public class RandomAccessFileEx {
 
 	}
 
-	 static byte[] readFromFile(String filePath, int position, int size)
+public byte[] readFromFile(String filePath, int position, int size)
 			throws IOException {
 
 		RandomAccessFile file = new RandomAccessFile(filePath, "r");
@@ -57,27 +57,5 @@ public class RandomAccessFileEx {
 
 	}
  
- public void criar(String caminho){
-	 try {
-		FileOutputStream fl = new FileOutputStream(caminho);
-	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
- }
- 
- public void escrever(String caminho,byte[] data, int pos,int tamanho){
-	 try {
-		FileOutputStream fl = new FileOutputStream(caminho);
-		fl.write(data, pos, tamanho);
-		fl.flush();
-		fl.close();
-	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
- }
+
 }
