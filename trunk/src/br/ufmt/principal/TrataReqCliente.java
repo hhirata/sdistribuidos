@@ -19,7 +19,6 @@ public class TrataReqCliente implements Runnable{
 			Object obj = oi.readObject();
 			if(obj instanceof String){
 				try {
-					System.out.println(obj);
 					byte[] parte = new TrataXML().parteArquivo((String)obj,caminho);
 					DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
 /*					Conteudo ctd = new Conteudo();
@@ -28,7 +27,6 @@ public class TrataReqCliente implements Runnable{
 					saida.writeObject(ctd);*/
 					saida.writeInt(parte.length);
 					saida.write(parte);
-					System.out.println(parte);
 					cliente.close();
 				} catch (JAXBException e) {
 					// TODO Auto-generated catch block

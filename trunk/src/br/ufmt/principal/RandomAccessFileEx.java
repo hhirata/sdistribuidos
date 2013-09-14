@@ -8,7 +8,7 @@ import java.io.RandomAccessFile;
 
 public class RandomAccessFileEx {
 
-	static final String FILEPATH = "D:\\NotasMD.pdf";
+	static final String FILEPATH = "D:\\NS330.rar";
 	static File  arquivo= new File(FILEPATH);
 	static final String FILEPATH2 = "D:\\outro.mp3";
 	static int tamanho = (int)arquivo.length();
@@ -45,7 +45,7 @@ public class RandomAccessFileEx {
 
 	}
 
- static void writeToFile(String filePath, byte[] data, int position)
+ public void writeToFile(String filePath, byte[] data, int position)
 			throws IOException {
 
 		RandomAccessFile file = new RandomAccessFile(filePath, "rw");
