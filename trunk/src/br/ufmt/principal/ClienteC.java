@@ -9,10 +9,14 @@ import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import br.ufmt.requisicao.RequisitaArquivo;
+import br.ufmt.requisicao.TrataXMLReq;
+
 public class ClienteC implements Runnable {
 
 	private String servidorString;
 	private int porta;
+
 	public String getServidorString() {
 		return servidorString;
 	}
@@ -140,7 +144,9 @@ public class ClienteC implements Runnable {
 				s.close();
 			}
 			arquivo.close();*/
-			ArrayList<String> ips = new ArrayList<>();
+			
+			//Solicitando de outros clientes e montando
+/*			ArrayList<String> ips = new ArrayList<>();
 			ips.add("192.168.1.3");
 			ips.add("192.168.1.4");
 			int max = ips.size();
@@ -176,8 +182,8 @@ public class ClienteC implements Runnable {
 				byte []b = new byte[i];
 				dt.readFully(b,0,b.length);
 				System.out.println("Recebendo de "+end);
-/*				RandomAccessFileEx hand = new RandomAccessFileEx();
-				hand.writeToFile("D:\\Downloads\\11.rar", b, cont);*/
+				RandomAccessFileEx hand = new RandomAccessFileEx();
+				hand.writeToFile("D:\\Downloads\\11.rar", b, cont);
 				if(contador+1 <max){
 					contador++;
 				}
@@ -191,8 +197,48 @@ public class ClienteC implements Runnable {
 
 				s.close();
 			}
-			arquivo.close();
+			arquivo.close();*/
 			
+			ArrayList<String> ips = new ArrayList<>();
+			ips.add("192.168.1.3");
+			//ips.add("192.168.1.4");
+			int max = ips.size();
+			int contador=0;
+			int tamanho=29918871;
+			int tamanho2=29918871;
+			int cont =0;
+			int qtd=32768;
+			byte[]bts = new byte[tamanho];
+			RandomAccessFile arquivo = new RandomAccessFile("D:\\Downloads\\Data.pdf", "rw");
+			Thread t;
+	    	while(tamanho > 0){
+				if(qtd>tamanho){
+					qtd=tamanho;
+
+				}
+				String end= ips.get(contador);
+				RequisitaArquivo rq = new RequisitaArquivo();
+				rq.setNome("Data.pdf");
+				rq.setPosicao(cont);
+				rq.setTamanho(qtd);
+				String req = new TrataXMLReq().criarXmlReq(rq);
+				t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont));
+				t.start();
+				t.join();
+				if(contador+1 <max){
+					contador++;
+				}
+				else{
+					contador=0;
+					
+				}
+				cont= cont+qtd;
+				tamanho= tamanho- qtd;
+				
+			}
+			
+				arquivo.close();
+		
 		}catch (Exception e){
 			e.printStackTrace();
 		}
