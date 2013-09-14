@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="resposta" type="resposta"/>
+
+  <xs:complexType name="dadosArquivo">
+    <xs:sequence>
+      <xs:element name="nome" type="xs:string" minOccurs="0"/>
+      <xs:element name="md5" type="xs:string" minOccurs="0"/>
+      <xs:element name="tamanho" type="xs:string" minOccurs="0"/>
+      <xs:element name="ip" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="resposta">
+    <xs:sequence>
+      <xs:element name="dadosArquivo" type="dadosArquivo" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
