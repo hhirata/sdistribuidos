@@ -209,7 +209,7 @@ public class ClienteC implements Runnable {
 			int cont =0;
 			int qtd=32768;
 			byte[]bts = new byte[tamanho];
-			RandomAccessFile arquivo = new RandomAccessFile("D:\\Downloads\\Data.pdf", "rw");
+			RandomAccessFile arquivo = new RandomAccessFile("D:\\Data.pdf", "rw");
 			Thread t;
 	    	while(tamanho > 0){
 				if(qtd>tamanho){
