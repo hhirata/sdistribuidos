@@ -8,7 +8,7 @@ public class Testando {
 				
 			try {
 				new ServidorC(1024);
-				Thread cliente= new Thread(new ClienteC("192.168.1.3", 1024));
+				Thread cliente= new Thread(new ClienteC("192.168.1.2", 1024));
 				cliente.start();
 				cliente.join();
 			} catch (IOException e) {

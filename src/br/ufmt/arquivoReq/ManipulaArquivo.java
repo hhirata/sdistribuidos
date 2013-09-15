@@ -78,8 +78,7 @@ public class ManipulaArquivo implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
-	
+
 		try {
 			file.getChannel();
 			file.seek(position);
@@ -88,7 +87,7 @@ public class ManipulaArquivo implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
+	 
+}
 
 }

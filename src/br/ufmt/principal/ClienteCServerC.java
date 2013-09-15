@@ -109,6 +109,7 @@ public class ClienteCServerC implements Runnable {
 			t.start();
 			t.join();
 			s.close();
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
