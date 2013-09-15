@@ -101,7 +101,12 @@ public class ClienteCServerC implements Runnable {
 			ObjectOutputStream oo = new ObjectOutputStream(s.getOutputStream());
 			oo.writeObject(requisicao);
 			DataInputStream dt = new DataInputStream(s.getInputStream());
+			
 			int i = dt.readInt();
+			if(i==-1){
+				System.out.println("erro");
+				System.exit(1);
+			}
 			byte []b = new byte[i];
 			dt.readFully(b,0,b.length);
 			System.out.println("Recebendo de "+ endereco);
