@@ -10,6 +10,7 @@ import java.net.Socket;
 import javax.xml.bind.JAXBException;
 
 import br.ufmt.requisicao.TrataXMLReq;
+import br.ufmt.xml.ValidaXML;
 
 public class TrataReqCliente implements Runnable{
 
@@ -19,49 +20,61 @@ public class TrataReqCliente implements Runnable{
 		try {
 			ObjectInputStream oi = new ObjectInputStream(cliente.getInputStream());
 			Object obj = oi.readObject();
+			
 			if(obj instanceof String){
-				try {
-					byte[] parte = new TrataXMLReq().parteArquivo((String)obj,caminho);
+				boolean b = new ValidaXML().validaReq((String)obj);
+				if(b){
+					try {
+						System.out.println("verdade");
+						byte[] parte = new TrataXMLReq().parteArquivo((String)obj,caminho);
+						DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
+						/*					Conteudo ctd = new Conteudo();
+						ctd.setCtd(parte);
+						System.out.println(ctd.getCtd().hashCode());
+						saida.writeObject(ctd);*/
+						saida.writeInt(parte.length);
+						saida.write(parte);
+						cliente.close();
+					} catch (JAXBException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+
+					} 
+				}else{
+					System.out.println("falso");
 					DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
-/*					Conteudo ctd = new Conteudo();
-					ctd.setCtd(parte);
-					System.out.println(ctd.getCtd().hashCode());
-					saida.writeObject(ctd);*/
-					saida.writeInt(parte.length);
-					saida.write(parte);
+					saida.writeInt(-1);
 					cliente.close();
-				} catch (JAXBException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
-				
 			}
-		} catch (IOException e) {
+		
+		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
-	public String getCaminho() {
-		return caminho;
-	}
-	public void setCaminho(String caminnho) {
-		this.caminho = caminnho;
-	}
-	public Socket getCliente() {
-		return cliente;
-	}
-	public void setCliente(Socket cliente) {
-		this.cliente = cliente;
-	}
-	public TrataReqCliente(Socket cliente,String caminho) {
-			
+
+
+		}
+		public String getCaminho() {
+			return caminho;
+		}
+		public void setCaminho(String caminnho) {
+			this.caminho = caminnho;
+		}
+		public Socket getCliente() {
+			return cliente;
+		}
+		public void setCliente(Socket cliente) {
+			this.cliente = cliente;
+		}
+		public TrataReqCliente(Socket cliente,String caminho) {
+
 			this.cliente = cliente;
 			this.caminho=caminho;
-	}
-	
+		}
 
-}
+
+	}

@@ -223,6 +223,7 @@ public class ClienteC implements Runnable {
 				rq.setNome("Data.pdf");
 				rq.setPosicao(cont);
 				rq.setTamanho(qtd);
+			
 				String req = new TrataXMLReq().criarXmlReq(rq);
 				Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont));
 				t.start();
