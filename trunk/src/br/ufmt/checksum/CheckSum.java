@@ -63,7 +63,7 @@ public class CheckSum {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		CheckSum ck = new CheckSum("D:\\Data.pdf");
+		CheckSum ck = new CheckSum("D:\\Downloads\\Data.pdf");
 		System.out.println(ck.calculaMD5());
 
 	}

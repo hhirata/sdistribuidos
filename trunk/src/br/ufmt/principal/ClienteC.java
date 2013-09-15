@@ -38,7 +38,7 @@ public class ClienteC implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		try{
-			
+
 			//Solicitando e enviando um arquivo pequeno 
 			/* Socket s = new Socket(servidorString, porta);
         ObjectOutputStream oo = new ObjectOutputStream(s.getOutputStream());
@@ -65,16 +65,16 @@ public class ClienteC implements Runnable {
 
 
         s.close();*/
-			
-			
-			
+
+
+
 			//Montando o arquivo em partes na memória via localhost
-			
-/*			int tamanho=84398520;
+
+			/*			int tamanho=84398520;
 			int cont =0;
 			int qtd=8192;
 			byte[] fil = new byte[tamanho];
-			
+
 			while(tamanho > 0){
 				if(qtd>tamanho){
 					qtd=tamanho;
@@ -95,7 +95,7 @@ public class ClienteC implements Runnable {
 				int i = dt.readInt();
 				//byte []b = new byte[i];
 				dt.readFully(fil,cont,i);
-				
+
 				cont= cont+qtd;
 				tamanho= tamanho- qtd;
 
@@ -104,11 +104,11 @@ public class ClienteC implements Runnable {
 			}
 			 RandomAccessFileEx hand = new RandomAccessFileEx();
 			 hand.writeToFile("D:\\Downloads\\NS330.rar",fil ,0);*/
-			
-			
+
+
 			//multiplas partes em disco
 
-/*			int tamanho=177664;
+			/*			int tamanho=177664;
 			int cont =0;
 			int qtd=1024;
 			RandomAccessFileEx hand2 = new RandomAccessFileEx();
@@ -134,10 +134,10 @@ public class ClienteC implements Runnable {
 				int i = dt.readInt();
 				byte []b = new byte[i];
 				dt.readFully(b,0,b.length);
-				
+
 				RandomAccessFileEx hand = new RandomAccessFileEx();
 				hand.writeToFile("D:\\Downloads\\11.rar", b, cont);
-				
+
 				new Thread(new ManipulaArquivo("D:\\Downloads\\estrutura.doc", b, cont,arquivo)).start();;
 				cont= cont+qtd;
 				tamanho= tamanho- qtd;
@@ -145,9 +145,9 @@ public class ClienteC implements Runnable {
 				s.close();
 			}
 			arquivo.close();*/
-			
+
 			//Solicitando de outros clientes e montando
-/*			ArrayList<String> ips = new ArrayList<>();
+			/*			ArrayList<String> ips = new ArrayList<>();
 			ips.add("192.168.1.3");
 			ips.add("192.168.1.4");
 			int max = ips.size();
@@ -164,10 +164,10 @@ public class ClienteC implements Runnable {
 					qtd=tamanho;
 
 				}
-				
+
 				String end= ips.get(contador);
 				Socket s = new Socket(end, porta);
-				
+
 				ObjectOutputStream oo = new ObjectOutputStream(s.getOutputStream());
 				RequisitaArquivo rq = new RequisitaArquivo();
 				rq.setNome("Data.pdf");
@@ -190,7 +190,7 @@ public class ClienteC implements Runnable {
 				}
 				else{
 					contador=0;
-					
+
 				}
 				new Thread(new ManipulaArquivo("D:\\Downloads\\Data.pdf", b, cont,arquivo)).start();;
 				cont= cont+qtd;
@@ -199,9 +199,9 @@ public class ClienteC implements Runnable {
 				s.close();
 			}
 			arquivo.close();*/
-			
+
 			ArrayList<String> ips = new ArrayList<>();
-			ips.add("192.168.1.3");
+			ips.add("192.168.1.2");
 			//ips.add("192.168.1.7");
 			//ips.add("192.168.1.8");
 			int max = ips.size();
@@ -213,8 +213,7 @@ public class ClienteC implements Runnable {
 			int qtd=32768;
 			byte[]bts = new byte[tamanho];
 			RandomAccessFile arquivo = new RandomAccessFile("D:\\Downloads\\Data.pdf", "rw");
-			Thread t;
-	    	while(tamanho > 0){
+			while(tamanho > 0){
 				if(qtd>tamanho){
 					qtd=tamanho;
 
@@ -225,7 +224,7 @@ public class ClienteC implements Runnable {
 				rq.setPosicao(cont);
 				rq.setTamanho(qtd);
 				String req = new TrataXMLReq().criarXmlReq(rq);
-				t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont));
+				Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont));
 				t.start();
 				t.join();
 				if(contador+1 <max){
@@ -233,21 +232,25 @@ public class ClienteC implements Runnable {
 				}
 				else{
 					contador=0;
-					
+
 				}
 				cont= cont+qtd;
 				tamanho= tamanho- qtd;
-				
+
 			}
-				
-				arquivo.close();
-				CheckSum ck = new CheckSum("D:\\Downloads\\Data.pdf");
-				String md5=ck.calculaMD5();
-				if(md5.equals(check)){
-					//publica
-					System.out.println("Arquivo Completo");
-				}
-		
+
+			arquivo.close();
+			CheckSum ck = new CheckSum("D:\\Downloads\\Data.pdf");
+			String md5=ck.calculaMD5();
+			if(md5.equals(check)){
+				//publica
+				System.out.println("Arquivo Completo");
+			}else{
+
+				System.out.println("Erro");
+				System.out.println(md5);
+			}
+
 		}catch (Exception e){
 			e.printStackTrace();
 		}
