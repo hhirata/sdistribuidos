@@ -9,6 +9,7 @@ import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import br.ufmt.checksum.CheckSum;
 import br.ufmt.requisicao.RequisitaArquivo;
 import br.ufmt.requisicao.TrataXMLReq;
 
@@ -201,11 +202,13 @@ public class ClienteC implements Runnable {
 			
 			ArrayList<String> ips = new ArrayList<>();
 			ips.add("192.168.1.3");
-			//ips.add("192.168.1.4");
+			//ips.add("192.168.1.7");
+			//ips.add("192.168.1.8");
 			int max = ips.size();
 			int contador=0;
 			int tamanho=29918871;
 			int tamanho2=29918871;
+			String check= new String("d62bcd0f33a976303b1415fba99c9bc6");
 			int cont =0;
 			int qtd=32768;
 			byte[]bts = new byte[tamanho];
@@ -236,8 +239,14 @@ public class ClienteC implements Runnable {
 				tamanho= tamanho- qtd;
 				
 			}
-			
+				
 				arquivo.close();
+				CheckSum ck = new CheckSum("D:\\Downloads\\Data.pdf");
+				String md5=ck.calculaMD5();
+				if(md5.equals(check)){
+					//publica
+					System.out.println("Arquivo Completo");
+				}
 		
 		}catch (Exception e){
 			e.printStackTrace();

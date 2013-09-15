@@ -26,6 +26,7 @@ public class ServidorC implements Runnable {
 		new Thread(this).start();
 		System.out.println("Servidor na porta:"+porta);
 		
+		
 	}
 	 public static void main(String[] args) {
 		 try {
