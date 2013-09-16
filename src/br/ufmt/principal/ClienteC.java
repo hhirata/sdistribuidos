@@ -2,12 +2,16 @@ package br.ufmt.principal;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import br.ufmt.checksum.CheckSum;
 import br.ufmt.requisicao.RequisitaArquivo;
@@ -202,8 +206,8 @@ public class ClienteC implements Runnable {
 
 			ArrayList<String> ips = new ArrayList<>();
 			ips.add("192.168.1.2");
-			ips.add("192.168.1.7");
-			ips.add("192.168.1.5");
+		//	ips.add("192.168.1.7");
+		//	ips.add("192.168.1.5");
 			 
 			int contador=0;
 			int tamanho=29918871;
@@ -212,7 +216,13 @@ public class ClienteC implements Runnable {
 			int cont =0;
 			int qtd=32768;
 			byte[]bts = new byte[tamanho];
+	/*		int max = tamanho/qtd;
+			max++;
+			ExecutorService executor = Executors.newFixedThreadPool(max);*/
+		
 			RandomAccessFile arquivo = new RandomAccessFile("D:\\Downloads\\Data.pdf", "rw");
+
+			
 			while(tamanho > 0){
 				if(qtd>tamanho){
 					qtd=tamanho;
@@ -228,6 +238,8 @@ public class ClienteC implements Runnable {
 				Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont,ips));
 				t.start();
 				t.join();
+/*				Runnable work = new ClienteCServerC(1024, end, req, arquivo,cont,ips);
+				executor.execute(work);*/
 				if(contador+1 <ips.size()){
 					contador++;
 				}
@@ -239,7 +251,12 @@ public class ClienteC implements Runnable {
 				tamanho= tamanho- qtd;
 
 			}
-
+/*			executor.shutdown();
+			//executor.awaitTermination(5L, TimeUnit.MINUTES);
+			while(!executor.isTerminated()){
+				
+			}
+*/
 			arquivo.close();
 			CheckSum ck = new CheckSum("D:\\Downloads\\Data.pdf");
 			String md5=ck.calculaMD5();

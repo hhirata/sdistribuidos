@@ -1,6 +1,7 @@
 package br.ufmt.principal;
 
 import java.io.DataInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
@@ -19,6 +20,12 @@ public class ClienteCServerC implements Runnable {
 	private String endereco;
 	private String requisicao;
 	private RandomAccessFile arquivo;
+
+	
+	
+
+
+
 	private int posicao;
 	private ArrayList<String>ips;
 	
