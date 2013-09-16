@@ -202,9 +202,9 @@ public class ClienteC implements Runnable {
 
 			ArrayList<String> ips = new ArrayList<>();
 			ips.add("192.168.1.2");
-			//ips.add("192.168.1.7");
-			//ips.add("192.168.1.8");
-			int max = ips.size();
+			ips.add("192.168.1.7");
+			ips.add("192.168.1.5");
+			 
 			int contador=0;
 			int tamanho=29918871;
 			int tamanho2=29918871;
@@ -225,10 +225,10 @@ public class ClienteC implements Runnable {
 				rq.setTamanho(qtd);
 			
 				String req = new TrataXMLReq().criarXmlReq(rq);
-				Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont));
+				Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont,ips));
 				t.start();
 				t.join();
-				if(contador+1 <max){
+				if(contador+1 <ips.size()){
 					contador++;
 				}
 				else{
