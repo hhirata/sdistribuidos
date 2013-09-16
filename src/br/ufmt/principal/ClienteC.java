@@ -237,7 +237,7 @@ public class ClienteC implements Runnable {
 			max++;
 			ExecutorService executor = Executors.newFixedThreadPool(max);*/
 		
-			RandomAccessFile arquivo = new RandomAccessFile(caminho+dados.getNome(), "rw");
+			RandomAccessFile arquivo = new RandomAccessFile(caminho+"\\"+dados.getNome(), "rw");
 			String nome = dados.getNome();
 				
 			while(tamanho > 0){
@@ -247,7 +247,7 @@ public class ClienteC implements Runnable {
 				}
 				String end= ips.get(contador);
 				RequisitaArquivo rq = new RequisitaArquivo();
-				rq.setNome("nome");
+				rq.setNome(nome);
 				rq.setPosicao(cont);
 				rq.setTamanho(qtd);
 			
@@ -275,7 +275,7 @@ public class ClienteC implements Runnable {
 			}
 */
 			arquivo.close();
-			CheckSum ck = new CheckSum(caminho+nome);
+			CheckSum ck = new CheckSum(caminho+"\\"+nome);
 			String md5=ck.calculaMD5();
 			if(md5.equals(check)){
 				//publica

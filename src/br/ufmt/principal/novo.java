@@ -20,6 +20,7 @@ public class novo {
 		File f = new File("C:\\Users\\Henrique Hirata\\Desktop\\Dados.xml");
 		try {
 			DadosArquivo d = new TrataXMLDados().le(f);
+			System.out.println(d.getNome());
 			ArrayList<String> a = (ArrayList<String>) d.getIp();
 			for(String s : a)
 			System.out.println(s);
