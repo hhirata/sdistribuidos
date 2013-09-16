@@ -20,7 +20,7 @@ public class ClienteCServerC implements Runnable {
 	private String endereco;
 	private String requisicao;
 	private RandomAccessFile arquivo;
-
+	
 	
 	
 

@@ -2,6 +2,7 @@ package br.ufmt.principal;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -14,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import br.ufmt.checksum.CheckSum;
+import br.ufmt.dados.DadosArquivo;
+import br.ufmt.dados.TrataXMLDados;
 import br.ufmt.requisicao.RequisitaArquivo;
 import br.ufmt.requisicao.TrataXMLReq;
 
@@ -21,7 +24,19 @@ public class ClienteC implements Runnable {
 
 	private String servidorString;
 	private int porta;
-
+	private int modo=0;
+	private String caminho;
+	private File req;
+	
+	
+   
+	public ClienteC(int porta, int modo, String caminho, File req) {
+		super();
+		this.porta = porta;
+		this.modo = modo;
+		this.caminho = caminho;
+		this.req = req;
+	}
 	public String getServidorString() {
 		return servidorString;
 	}
@@ -203,16 +218,18 @@ public class ClienteC implements Runnable {
 				s.close();
 			}
 			arquivo.close();*/
-
+			if(modo==1){
+				
+			DadosArquivo dados = new TrataXMLDados().le(req);
+			
 			ArrayList<String> ips = new ArrayList<>();
-			ips.add("192.168.1.2");
-		//	ips.add("192.168.1.7");
-		//	ips.add("192.168.1.5");
-			 
+			
+			ips=(ArrayList<String>) dados.getIp();
+		 
 			int contador=0;
-			int tamanho=29918871;
-			int tamanho2=29918871;
-			String check= new String("d62bcd0f33a976303b1415fba99c9bc6");
+			int tamanho=Integer.parseInt(dados.getTamanho());
+			
+			String check=dados.getMd5();
 			int cont =0;
 			int qtd=32768;
 			byte[]bts = new byte[tamanho];
@@ -220,9 +237,9 @@ public class ClienteC implements Runnable {
 			max++;
 			ExecutorService executor = Executors.newFixedThreadPool(max);*/
 		
-			RandomAccessFile arquivo = new RandomAccessFile("D:\\Downloads\\Data.pdf", "rw");
-
-			
+			RandomAccessFile arquivo = new RandomAccessFile(caminho+dados.getNome(), "rw");
+			String nome = dados.getNome();
+				
 			while(tamanho > 0){
 				if(qtd>tamanho){
 					qtd=tamanho;
@@ -230,7 +247,7 @@ public class ClienteC implements Runnable {
 				}
 				String end= ips.get(contador);
 				RequisitaArquivo rq = new RequisitaArquivo();
-				rq.setNome("Data.pdf");
+				rq.setNome("nome");
 				rq.setPosicao(cont);
 				rq.setTamanho(qtd);
 			
@@ -258,7 +275,7 @@ public class ClienteC implements Runnable {
 			}
 */
 			arquivo.close();
-			CheckSum ck = new CheckSum("D:\\Downloads\\Data.pdf");
+			CheckSum ck = new CheckSum(caminho+nome);
 			String md5=ck.calculaMD5();
 			if(md5.equals(check)){
 				//publica
@@ -268,7 +285,9 @@ public class ClienteC implements Runnable {
 				System.out.println("Erro");
 				System.out.println(md5);
 			}
-
+		}else if(modo==2){
+			
+		}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
