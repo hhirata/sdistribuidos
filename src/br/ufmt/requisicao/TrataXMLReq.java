@@ -1,6 +1,7 @@
 package br.ufmt.requisicao;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -26,6 +27,7 @@ public class TrataXMLReq {
 
 	}
 
+	
 	public String criarXmlReq(RequisitaArquivo req) throws JAXBException{
 		ObjectFactory obj = new ObjectFactory();
 		SolicitaArquivo sl = new SolicitaArquivo();

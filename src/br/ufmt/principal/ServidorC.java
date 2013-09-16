@@ -7,12 +7,13 @@ public class ServidorC implements Runnable {
 
 	
 	ServerSocket servidor;
+	String caminho;
 	@Override
 	public void run() {
 		
 		while(true){
 			try {
-				String caminho = new String("D:\\");
+				// caminho = new String("D:\\");
 				new Thread(new TrataReqCliente(servidor.accept(),caminho )).start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -23,6 +24,15 @@ public class ServidorC implements Runnable {
 	}
 	public ServidorC(int porta) throws IOException {
 		servidor = new ServerSocket(porta);
+		new Thread(this).start();
+		System.out.println("Servidor na porta:"+porta);
+		
+		
+	}
+	
+	public ServidorC(int porta,String caminho) throws IOException {
+		servidor = new ServerSocket(porta);
+		this.caminho=caminho;
 		new Thread(this).start();
 		System.out.println("Servidor na porta:"+porta);
 		
