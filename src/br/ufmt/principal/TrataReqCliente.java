@@ -26,6 +26,7 @@ public class TrataReqCliente implements Runnable{
 				if(b){
 					try {
 						System.out.println("verdade");
+						System.out.println("Requisição de "+cliente.getInetAddress());
 						byte[] parte = new TrataXMLReq().parteArquivo((String)obj,caminho);
 						DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
 						/*					Conteudo ctd = new Conteudo();

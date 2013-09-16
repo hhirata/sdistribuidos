@@ -4,8 +4,11 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import br.ufmt.arquivoReq.ManipulaArquivo;
 
@@ -17,9 +20,31 @@ public class ClienteCServerC implements Runnable {
 	private String requisicao;
 	private RandomAccessFile arquivo;
 	private int posicao;
+	private ArrayList<String>ips;
 	
 	
 	
+	public ClienteCServerC(Socket s, int porta, String endereco,
+			String requisicao, RandomAccessFile arquivo, int posicao,
+			ArrayList<String> ips) {
+		super();
+		this.s = s;
+		this.porta = porta;
+		this.endereco = endereco;
+		this.requisicao = requisicao;
+		this.arquivo = arquivo;
+		this.posicao = posicao;
+		this.ips = ips;
+	}
+
+	public ArrayList<String> getIps() {
+		return ips;
+	}
+
+	public void setIps(ArrayList<String> ips) {
+		this.ips = ips;
+	}
+
 	public ClienteCServerC(int porta, String endereco, String requisicao,
 			RandomAccessFile arquivo, int posicao) {
 		super();
@@ -89,6 +114,22 @@ public class ClienteCServerC implements Runnable {
 		this.posicao = posicao;
 	}
 
+	public void removeIP(){
+		if(ips.contains(endereco)){
+			ips.remove(endereco);			
+		}
+	}
+	
+	public void novoEndereco(){
+		int pos = ips.indexOf(endereco);
+		this.removeIP();
+		int tam = ips.size();
+		if(tam >= pos){
+			endereco=ips.get(0);
+		}else if(tam==0){
+			
+		}
+	}
 	public ClienteCServerC() {
 		// TODO Auto-generated constructor stub
 	}
@@ -98,6 +139,7 @@ public class ClienteCServerC implements Runnable {
 
 		try {
 			s = new Socket(endereco, porta);
+			s.setSoTimeout(20000);
 			ObjectOutputStream oo = new ObjectOutputStream(s.getOutputStream());
 			oo.writeObject(requisicao);
 			DataInputStream dt = new DataInputStream(s.getInputStream());
@@ -117,17 +159,76 @@ public class ClienteCServerC implements Runnable {
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			   System.out.println("Erro ao receber de "+endereco);
+				this.novoEndereco();
+				Thread t = new Thread(new ClienteCServerC(porta, endereco, requisicao, arquivo, posicao, ips));
+				t.start();
+				try {
+					t.join();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		//	e.printStackTrace();
+		}catch(ConnectException e){
+			
+			System.out.println("Erro ao receber de "+endereco);
+			this.novoEndereco();
+			Thread t = new Thread(new ClienteCServerC(porta, endereco, requisicao, arquivo, posicao, ips));
+			t.start();
+			try {
+				t.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+		catch (IOException e) {
+			System.out.println("Erro ao receber de "+endereco);
+			this.novoEndereco();
+			Thread t = new Thread(new ClienteCServerC(porta, endereco, requisicao, arquivo, posicao, ips));
+			t.start();
+			try {
+				t.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		//e.printStackTrace();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
+			System.out.println("Erro ao receber de "+endereco);
+			this.novoEndereco();
+			Thread t = new Thread(new ClienteCServerC(porta, endereco, requisicao, arquivo, posicao, ips));
+			t.start();
+			try {
+				t.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		//e.printStackTrace();
+		
+		}catch(Exception e){
+			
 			e.printStackTrace();
+			
 		}
 
 
 
+	}
+
+	public ClienteCServerC(int porta, String endereco, String requisicao,
+			RandomAccessFile arquivo, int posicao, ArrayList<String> ips) {
+		super();
+		this.porta = porta;
+		this.endereco = endereco;
+		this.requisicao = requisicao;
+		this.arquivo = arquivo;
+		this.posicao = posicao;
+		this.ips = ips;
 	}
 
 }
