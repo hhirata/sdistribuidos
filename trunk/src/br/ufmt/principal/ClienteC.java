@@ -432,12 +432,14 @@ public class ClienteC implements Runnable {
 						pb.setIp(addr.getHostAddress());
 						String bff = new TrataXmlPlub().criaXmlPubl(pb); 
 						System.out.println(bff);
+						Socket publicar = new Socket("10.10.0.155",1023);
+						ObjectOutputStream ob = new ObjectOutputStream(publicar.getOutputStream());
+						ob.writeObject(bff);
 
 					} catch (UnknownHostException | JAXBException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
 
 				}else{
 
