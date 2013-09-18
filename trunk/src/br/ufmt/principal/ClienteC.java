@@ -2,6 +2,7 @@ package br.ufmt.principal;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -18,15 +19,20 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextArea;
 import br.ufmt.busca.Busca;
 import br.ufmt.checksum.CheckSum;
 import br.ufmt.dados.DadosArquivo;
+import br.ufmt.dados.Resposta;
 import br.ufmt.dados.TrataXMLDados;
+import br.ufmt.principal.Principal.ArquivoTabela;
 import br.ufmt.publica.Publica;
 import br.ufmt.publica.TrataXmlPlub;
 import br.ufmt.requisicao.RequisitaArquivo;
 import br.ufmt.requisicao.TrataXMLReq;
+import br.ufmt.xml.ValidaXML;
 
 public class ClienteC implements Runnable {
 
@@ -35,8 +41,60 @@ public class ClienteC implements Runnable {
 	private int modo=0;
 	private String caminho;
 	private File req;
+	private String  busca;
+	private DadosArquivo dA;
+	private ObservableList<ArquivoTabela> dados3 = FXCollections.observableArrayList();
+	private ArrayList<DadosArquivo> dadosip;
+
+	
+	
 
 
+	public ClienteC(int porta, int modo, String caminho, DadosArquivo dA) {
+		super();
+		this.porta = porta;
+		this.modo = modo;
+		this.caminho = caminho;
+		this.dA = dA;
+	}
+
+	public ClienteC(int porta, int modo, DadosArquivo dA) {
+		super();
+		this.porta = porta;
+		this.modo = modo;
+		this.dA = dA;
+	}
+
+	public ClienteC(int porta, int modo, String busca, DadosArquivo dA,
+			ObservableList<ArquivoTabela> dados3,
+			ArrayList<DadosArquivo> dadosip) {
+		super();
+		this.porta = porta;
+		this.modo = modo;
+		this.busca = busca;
+		this.dA = dA;
+		this.dados3 = dados3;
+		this.dadosip = dadosip;
+	}
+
+	public ClienteC(int porta, int modo, String busca, DadosArquivo dA,
+			ObservableList<ArquivoTabela> dados3) {
+		super();
+		this.porta = porta;
+		this.modo = modo;
+		this.busca = busca;
+		this.dA = dA;
+		this.dados3 = dados3;
+	}
+
+	public ClienteC(int porta, int modo, String caminho, File req, String busca) {
+		super();
+		this.porta = porta;
+		this.modo = modo;
+		this.caminho = caminho;
+		this.req = req;
+		this.busca = busca;
+	}
 	public ClienteC(int porta, int modo, String caminho, File req) {
 		super();
 		this.porta = porta;
@@ -286,19 +344,107 @@ public class ClienteC implements Runnable {
 						pb.setIp(addr.getHostAddress());
 						String bff = new TrataXmlPlub().criaXmlPubl(pb); 
 						System.out.println(bff);
+						Socket publicar = new Socket("10.10.0.155",1023);
+						ObjectOutputStream ob = new ObjectOutputStream(publicar.getOutputStream());
+						ob.writeObject(bff);
 
 					} catch (UnknownHostException | JAXBException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 				}else{
 
 					System.out.println("Erro");
 					System.out.println(md5);
 				}
 			}else if(modo==2){
+				Socket s = new Socket("10.10.0.155",1023);
+				ObjectOutputStream ob = new ObjectOutputStream(s.getOutputStream());
+				ob.writeObject(busca);
 
+				ObjectInputStream oi = new ObjectInputStream(s.getInputStream());
+				Object obj = oi.readObject();
+				if(new ValidaXML().validaDados((String)obj)){
+					DadosArquivo dados = new TrataXMLDados().le((String)obj);
+					dA=dados;
+					dados3.add(new ArquivoTabela(dA.getNome(),dA.getTamanho()));
+					dadosip.add(dados);
+
+
+				}
+			}else if(modo==3){
+				
+				ArrayList<String> ips = new ArrayList<>();
+
+				ips=(ArrayList<String>) dA.getIp();
+
+				int contador=0;
+				int tamanho=dA.getTamanho();
+				int tamanho2=dA.getTamanho();
+				String check=dA.getMd5();
+				int cont =0;
+				int qtd=32768;
+				byte[]bts = new byte[tamanho];
+				RandomAccessFile arquivo = new RandomAccessFile(caminho+"\\"+dA.getNome(), "rw");
+				String nome = dA.getNome();
+
+				while(tamanho > 0){
+					if(qtd>tamanho){
+						qtd=tamanho;
+
+					}
+					String end= ips.get(contador);
+					RequisitaArquivo rq = new RequisitaArquivo();
+					rq.setNome(nome);
+					rq.setPosicao(cont);
+					rq.setTamanho(qtd);
+
+					String req = new TrataXMLReq().criarXmlReq(rq);
+					Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont,ips));
+					t.start();
+					t.join();
+					if(contador+1 <ips.size()){
+						contador++;
+					}
+					else{
+						contador=0;
+
+					}
+					cont= cont+qtd;
+					tamanho= tamanho- qtd;
+
+				}
+
+				arquivo.close();
+				CheckSum ck = new CheckSum(caminho+"\\"+nome);
+				String md5=ck.calculaMD5();
+				if(md5.equals(check)){
+					//publica
+					System.out.println("Arquivo Completo");
+					InetAddress addr;
+					try {
+						addr = InetAddress.getLocalHost();
+						Publica pb = new Publica();
+						pb.setNome(nome);
+						pb.setTamanho(tamanho2);
+						pb.setMd5(check);
+						pb.setIp(addr.getHostAddress());
+						String bff = new TrataXmlPlub().criaXmlPubl(pb); 
+						System.out.println(bff);
+
+					} catch (UnknownHostException | JAXBException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+
+				}else{
+
+					System.out.println("Erro");
+					System.out.println(md5);
+				}
+				
 			}
 		}catch (Exception e){
 			e.printStackTrace();

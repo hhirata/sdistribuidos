@@ -1,11 +1,19 @@
 package br.ufmt.publica;
 
+import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+
+
+
+
+
 
 
 
@@ -28,6 +36,18 @@ public class TrataXmlPlub {
 		
 		return saida.toString();
 		
+	}
+
+	
+	public Publica Dados(String req) throws JAXBException{
+		JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		JAXBElement<SolicitaPublicacao> unmarshalledObject = 
+				(JAXBElement<SolicitaPublicacao>)unmarshaller.unmarshal(new ByteArrayInputStream(req.getBytes()));
+		SolicitaPublicacao rqObj = unmarshalledObject.getValue();
+		Publica p = rqObj.getPublica();	
+		return p;
+
 	}
 	
 	public static void main(String[] args) {
