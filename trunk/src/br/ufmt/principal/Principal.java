@@ -13,6 +13,18 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 
 
+
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.management.ObjectInstance;
+
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,11 +32,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.management.ObjectInstance;
+
 import javax.swing.text.TabExpander;
 import javax.xml.bind.JAXBException;
 
+
+import br.ufmt.checksum.CheckSum;
 import br.ufmt.dados.DadosArquivo;
 import br.ufmt.dados.TrataXMLDados;
+import br.ufmt.publica.Publica;
+import br.ufmt.publica.TrataXmlPlub;
+
+
+import br.ufmt.dados.DadosArquivo;
+import br.ufmt.dados.TrataXMLDados;
+
 
 import com.sun.tools.hat.internal.parser.Reader;
 
@@ -338,12 +360,70 @@ public class Principal extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 
+				InetAddress addr;
+				try {
+					addr = InetAddress.getLocalHost();
+					Publica pb = new Publica();
+					pb.setNome(fl2.getName());
+					pb.setTamanho((int)fl2.length());
+					pb.setMd5(new CheckSum(fl2.getAbsolutePath()).calculaMD5());
+					pb.setIp(addr.getHostAddress());
+					String bff = new TrataXmlPlub().criaXmlPubl(pb); 
+					System.out.println(bff);
+					st.getChildren().remove(anchorUp);
+				} catch (UnknownHostException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+
+
 				st.getChildren().remove(anchorUp);
 			
-				
+				}
 			}
 		});
 		
+		btCancelar.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				st.getChildren().remove(anchorDown);
+			}
+		});
+		btCancelaUp.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				st.getChildren().remove(anchorUp);
+			}
+		});
+		
+		tabela.setOnMousePressed(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event arg0) {
+				// TODO Auto-generated method stub
+				dados2.clear();
+				int i =tabela.getSelectionModel().getSelectedIndex();
+				if(i>=0){
+				DadosArquivo  info= da.get(i);
+				ArrayList<IpTabela>ips = new ArrayList<>();
+				for(String str : info.getIp()){
+					ips.add(new IpTabela(str));
+
+				}
+
+				dados2.addAll(ips);
+				}
+
+			}
+			
+		});
+		vbCont.setAlignment(Pos.CENTER);
+		vbCont.getChildren().addAll(lblServer,lblDown,tabela,tabela2);
+		vbMenu.getChildren().addAll(bt2,bt,bt3);
+		hbBaixar.getChildren().addAll(vbMenu,vbCont);
+		
+
 		btCancelar.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -387,6 +467,13 @@ public class Principal extends Application {
 		tbusca.setDisable(true);
 		
 
+
+		st.getChildren().add(hbBaixar);
+		tbaixar.setContent(st);
+		tbusca.setDisable(true);
+		
+
+
 		Scene sc= new Scene(tb);
 		stage.setScene(sc);
 		stage.setTitle("Compartilhador");
@@ -406,8 +493,21 @@ public class Principal extends Application {
 		
 
 		
-	}
+		}
+		
 
+
+
+	
+	
+
+	public static void main(String[] args){
+		// TODO Auto-generated method stub
+		launch(args);
+		
+		
+	}
+	
 	
 	public static class ArquivoTabela{
 		private final SimpleStringProperty nome;
@@ -444,15 +544,6 @@ public class Principal extends Application {
 		}
 
 
-		
-		
-	}
-	
-	
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		launch(args);
 		
 		
 	}
