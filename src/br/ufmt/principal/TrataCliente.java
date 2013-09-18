@@ -63,8 +63,9 @@ public class TrataCliente implements Runnable {
 					if(new ValidaXML().validaPublica((String)obj)){
 						Publica pb = new TrataXmlPlub().Dados((String)obj);
 						Consultas cons= new Consultas();
+						if(!cons.Existe(pb.getNome(), pb.getIp())){
 						cons.insereArquivo(pb);
-						 
+						}
 						
 					}
 				}

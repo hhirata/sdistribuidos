@@ -41,6 +41,30 @@ public class Consultas {
 		
 	}
 	
+	public boolean Existe(String nome, String ip) throws SQLException{
+		Connection c = new BancoDados().getConnection();
+	     List<Ip> lista = new ArrayList<>();
+	     PreparedStatement stm = c.prepareStatement("SELECT * FROM arquivo where nome like ? and ip like ?");
+	     stm.setString(1, nome);
+	     stm.setString(2, ip);
+	     ResultSet rs = stm.executeQuery();
+	     while(rs.next()){
+	    	 Ip i = new Ip();
+	    	 i.setIp(rs.getString("ip"));
+	    	 lista.add(i);
+	     }
+	     rs.close();
+	     stm.close();
+	     c.close();
+	     if(lista.size()>0){
+	    	 return true;
+	    	 
+	     }else{
+	    	 return false;
+	     }
+	     
+		
+	}
 	public List<String> buscaIps(String nome) throws SQLException{
 		Connection c = new BancoDados().getConnection();
 	     List<String> lista = new ArrayList<>();
