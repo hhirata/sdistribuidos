@@ -1,10 +1,9 @@
 package br.ufmt.principal;
 
-import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 import java.net.Socket;
 
 import javax.xml.bind.JAXBException;
@@ -25,8 +24,8 @@ public class TrataReqCliente implements Runnable{
 				boolean b = new ValidaXML().validaReq((String)obj);
 				if(b){
 					try {
-						System.out.println("verdade");
-						System.out.println("Requisição de "+cliente.getInetAddress());
+					//	System.out.println("verdade");
+						System.out.println("Requisicao de "+cliente.getInetAddress());
 						byte[] parte = new TrataXMLReq().parteArquivo((String)obj,caminho);
 						DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
 						/*					Conteudo ctd = new Conteudo();

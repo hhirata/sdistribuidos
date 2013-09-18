@@ -11,6 +11,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import javafx.scene.control.TextArea;
 import br.ufmt.arquivoReq.ManipulaArquivo;
 
 public class ClienteCServerC implements Runnable {
@@ -20,12 +21,6 @@ public class ClienteCServerC implements Runnable {
 	private String endereco;
 	private String requisicao;
 	private RandomAccessFile arquivo;
-	
-	
-	
-
-
-
 	private int posicao;
 	private ArrayList<String>ips;
 	
@@ -158,7 +153,8 @@ public class ClienteCServerC implements Runnable {
 			}
 			byte []b = new byte[i];
 			dt.readFully(b,0,b.length);
-			System.out.println("Recebendo de "+ endereco);
+     		System.out.println("Recebendo de "+ endereco);
+//			txt.appendText("\nRecebendo de "+ endereco);
 			Thread t= new Thread(new ManipulaArquivo( b, posicao, arquivo));
 			t.start();
 			t.join();
