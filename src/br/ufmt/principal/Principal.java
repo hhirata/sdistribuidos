@@ -76,6 +76,8 @@ public class Principal extends Application {
 	File fl2 = null;
 	TableView tabela = new TableView<>();
 	TableView tabela2 = new TableView<>();
+	TableView tabela3 = new TableView<>();
+	TableView tabela4 = new TableView<>();
 	DadosArquivo novo = new DadosArquivo();
 	ArrayList<DadosArquivo> da = new ArrayList<>();
 	final ObservableList<ArquivoTabela> dados = FXCollections.observableArrayList();
@@ -185,6 +187,13 @@ public class Principal extends Application {
 		TableColumn coluna3 = new TableColumn("IPs");
 		coluna3.setCellValueFactory(new PropertyValueFactory<IpTabela,String>("ip"));
 		
+		TableColumn coluna4 = new TableColumn("Nome");
+		coluna1.setCellValueFactory(new PropertyValueFactory<ArquivoTabela,String>("nome"));
+		TableColumn coluna5 = new TableColumn("Tamanho");
+		coluna2.setCellValueFactory(new PropertyValueFactory<ArquivoTabela,String>("tamanho"));
+		TableColumn coluna6 = new TableColumn("IPs");
+		coluna3.setCellValueFactory(new PropertyValueFactory<IpTabela,String>("ip"));
+		
 		tabela.setEditable(false);
 		tabela.setMinWidth(500);
 		tabela.setMaxSize(500, 200);
@@ -196,6 +205,19 @@ public class Principal extends Application {
 		tabela2.setMaxSize(500, 200);
 		tabela2.getColumns().addAll(coluna3);
 		tabela2.setItems(dados2);
+		
+		
+		tabela3.setEditable(false);
+		tabela3.setMinWidth(500);
+		tabela3.setMaxSize(500, 200);
+		tabela3.getColumns().addAll(coluna1,coluna2);
+		tabela3.setItems(dados);
+		
+		tabela4.setEditable(false);
+		tabela4.setMinWidth(200);
+		tabela4.setMaxSize(500, 200);
+		tabela4.getColumns().addAll(coluna3);
+		tabela4.setItems(dados2);
 		
 		VBox vbCont = new VBox(4);
 	    vbCont.setSpacing(10);
@@ -209,8 +231,30 @@ public class Principal extends Application {
 		HBox hbBaixar=  new HBox();
 		
 
-
+		VBox vbBusca = new VBox();
+		GridPane gridBusca = new GridPane();
+		gridBusca.setVgap(4);
+		gridBusca.setHgap(4);
+		gridBusca.setPadding(new Insets(5, 5, 5, 5));
+		TextField txtBusca = new TextField();
+		Button btBusca = new Button();
+		ImageView imgBusca = new ImageView("File:img/search.png");
+		imgBusca.setFitHeight(24);
+		imgBusca.setFitWidth(24);
+		btBusca.setGraphic(imgBusca);
+		btBusca.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); 
+		Button btDown = new Button();
+		btDown.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); 
+		ImageView imgD = new ImageView("File:img/down.png");
+		imgD.setFitHeight(24);
+		imgD.setFitWidth(24);
+		btDown.setGraphic(imgD);
 		
+		gridBusca.add(txtBusca, 1, 0);
+		gridBusca.add(imgBusca, 2, 0);
+		
+		vbBusca.getChildren().addAll(gridBusca,tabela3,tabela4);
+		vbBusca.setAlignment(Pos.CENTER);
 		
 		bt.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -396,6 +440,15 @@ public class Principal extends Application {
 			}
 			
 		});
+		
+		btBusca.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		vbCont.setAlignment(Pos.CENTER);
 		vbCont.getChildren().addAll(lblServer,lblDown,tabela,tabela2);
 		vbMenu.getChildren().addAll(bt2,bt,bt3);
@@ -403,6 +456,7 @@ public class Principal extends Application {
 		
 		st.getChildren().add(hbBaixar);
 		tbaixar.setContent(st);
+		tbusca.setContent(vbBusca);
 		tbusca.setDisable(true);
 		
 
