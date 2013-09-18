@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
@@ -15,6 +16,7 @@ import java.io.PrintStream;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -81,7 +83,10 @@ public class Principal extends Application {
 	TableView tabela3 = new TableView<>();
 	TableView tabela4 = new TableView<>();
 	DadosArquivo novo = new DadosArquivo();
+	DadosArquivo ds = new DadosArquivo();
 	ArrayList<DadosArquivo> da = new ArrayList<>();
+	
+	final ArrayList<DadosArquivo> da2 = new ArrayList<>();
 	final ObservableList<ArquivoTabela> dados = FXCollections.observableArrayList();
 	final ObservableList<ArquivoTabela> dados3 = FXCollections.observableArrayList();
 	final ObservableList<IpTabela> dados2 = FXCollections.observableArrayList();
@@ -402,8 +407,16 @@ public class Principal extends Application {
 					pb.setIp(addr.getHostAddress());
 					String bff = new TrataXmlPlub().criaXmlPubl(pb); 
 					System.out.println(bff);
+					Publica b2 = new TrataXmlPlub().Dados(bff);
+					System.out.println(b2.getIp());
+					Socket publicar = new Socket("10.10.0.155",1023);
+					ObjectOutputStream ob = new ObjectOutputStream(publicar.getOutputStream());
+					ob.writeObject(bff);
 					st.getChildren().remove(anchorUp);
 				} catch (UnknownHostException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -453,9 +466,12 @@ public class Principal extends Application {
 			public void handle(Event arg0) {
 				// TODO Auto-generated method stub
 				dados2.clear();
+
 				int i =tabela3.getSelectionModel().getSelectedIndex();
 				if(i>=0){
-				DadosArquivo  info= da.get(i);
+				DadosArquivo  info= da2.get(i);
+				ds=info;
+				System.out.println(info.getMd5());
 				btDown.setDisable(false);
 				ArrayList<IpTabela>ips = new ArrayList<>();
 				for(String str : info.getIp()){
@@ -478,9 +494,19 @@ public class Principal extends Application {
 				// TODO Auto-generated method stub
 				 Busca b = new Busca();
 				 b.setNome(txtBusca.getText());
-		 		 String stB = new TrataXmlBusca().criarXmlReq(b);
+		 		 String stB = new TrataXmlBusca().criarXml(b);
 		 		 System.out.println(stB);
+		 		
+		 		 
+		 		 Thread tc =new Thread(new ClienteC(1023, 2, stB, ds,dados3,da2));
+		 		 tc.start();
+		 		 tc.join();
+		 		
+		 
 				} catch (JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}				
@@ -492,7 +518,8 @@ public class Principal extends Application {
 
 			@Override
 			public void handle(Event arg0) {
-				System.out.println("Teste");
+				
+				new Thread(new ClienteC(1024, 3,caminho2.getAbsolutePath(), ds)).start();
 			}
 		});
 		vbCont.setAlignment(Pos.CENTER);
@@ -532,7 +559,7 @@ public class Principal extends Application {
 		private final SimpleStringProperty nome;
 		private final SimpleIntegerProperty tamanho;
 		
-		private ArquivoTabela(String fnome, int ftamanho){
+		ArquivoTabela(String fnome, int ftamanho){
 			this.nome= new SimpleStringProperty(fnome);
 			this.tamanho= new SimpleIntegerProperty(ftamanho);
 			

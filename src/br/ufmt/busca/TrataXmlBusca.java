@@ -1,11 +1,15 @@
 package br.ufmt.busca;
 
+import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+
 
 
 
@@ -15,7 +19,7 @@ public class TrataXmlBusca {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String criarXmlReq(Busca b) throws JAXBException{
+	public String criarXml(Busca b) throws JAXBException{
 		ObjectFactory obj = new ObjectFactory();
 		SolicitaArquivoBusca sl = new SolicitaArquivoBusca();
 		sl.setBusca(b);
@@ -27,6 +31,17 @@ public class TrataXmlBusca {
 		marshaller.marshal(element, saida);
 		
 		return saida.toString();
+
+	}
+	
+	public String retornaNome(String req) throws JAXBException{
+		JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		JAXBElement<SolicitaArquivoBusca> unmarshalledObject = 
+				(JAXBElement<SolicitaArquivoBusca>)unmarshaller.unmarshal(new ByteArrayInputStream(req.getBytes()));
+		SolicitaArquivoBusca rqObj = unmarshalledObject.getValue();
+		Busca b = rqObj.getBusca();		
+		return b.getNome();
 
 	}
 

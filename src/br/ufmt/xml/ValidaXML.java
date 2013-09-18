@@ -57,6 +57,104 @@ public class ValidaXML {
 		
 	}
 	
+	public boolean validaPublica(String xml){
+		 DocumentBuilderFactory dbf =
+				    DocumentBuilderFactory.newInstance();
+				    dbf.setNamespaceAware(true);
+				    try {
+				        DocumentBuilder parser = dbf.newDocumentBuilder();
+				         Document document = parser.parse(new InputSource(new StringReader(xml)));
+				        SchemaFactory factory = SchemaFactory
+				        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+				        Schema schema = null;
+				        schema = factory.newSchema(new File("src/br/ufmt/xml/PublicaArquivo1.xsd"));
+				        Validator validator = schema.newValidator();
+				        validator.validate(new DOMSource(document));
+				        return true;
+				      } catch (SAXException e) {
+				      //  e.printStackTrace();
+				        return false;
+				      } catch (IllegalArgumentException e) {
+				       // e.printStackTrace();
+				        return false;
+				      } catch (IOException e) {
+				       // e.printStackTrace();
+				        return false;
+				      } catch (ParserConfigurationException e) {
+				       // e.printStackTrace();
+				        return false;
+				      }
+	}
+	public boolean validaBusca(String xml){
+		 DocumentBuilderFactory dbf =
+				    DocumentBuilderFactory.newInstance();
+				    dbf.setNamespaceAware(true);
+				    try {
+				        DocumentBuilder parser = dbf.newDocumentBuilder();
+				         Document document = parser.parse(new InputSource(new StringReader(xml)));
+				        SchemaFactory factory = SchemaFactory
+				        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+				        Schema schema = null;
+				        schema = factory.newSchema(new File("src/br/ufmt/xml/Busca1.xsd"));
+				        Validator validator = schema.newValidator();
+				        validator.validate(new DOMSource(document));
+				        return true;
+				      } catch (SAXException e) {
+				      //  e.printStackTrace();
+				        return false;
+				      } catch (IllegalArgumentException e) {
+				       // e.printStackTrace();
+				        return false;
+				      } catch (IOException e) {
+				       // e.printStackTrace();
+				        return false;
+				      } catch (ParserConfigurationException e) {
+				       // e.printStackTrace();
+				        return false;
+				      }
+		
+	}
+	
+	
+	public boolean validaDados(String xml){
+		 DocumentBuilderFactory dbf =
+				    DocumentBuilderFactory.newInstance();
+				    dbf.setNamespaceAware(true);
+				    try {
+				        DocumentBuilder parser = dbf.newDocumentBuilder();
+				         Document document = parser.parse(new InputSource(new StringReader(xml)));
+				        SchemaFactory factory = SchemaFactory
+				        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+				        Schema schema = null;
+				        schema = factory.newSchema(new File("src/br/ufmt/xml/Resposta1.xsd"));
+				        Validator validator = schema.newValidator();
+				        validator.validate(new DOMSource(document));
+				        return true;
+				      } catch (SAXException e) {
+				      //  e.printStackTrace();
+				        return false;
+				      } catch (IllegalArgumentException e) {
+				       // e.printStackTrace();
+				        return false;
+				      } catch (IOException e) {
+				       // e.printStackTrace();
+				        return false;
+				      } catch (ParserConfigurationException e) {
+				       // e.printStackTrace();
+				        return false;
+				      }
+		
+	}
+	
+	public boolean validar(String xml){
+		
+		return false;
+		
+	}
+	
 	public static void main(String[] args) {
 		
 		ValidaXML vl = new ValidaXML();

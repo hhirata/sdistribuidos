@@ -154,4 +154,10 @@ public class DadosArquivo {
         return this.ip;
     }
 
+	public void setIp(List<String> ip) {
+		this.ip = ip;
+	}
+    
+    
+
 }
