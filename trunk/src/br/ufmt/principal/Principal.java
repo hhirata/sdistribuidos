@@ -235,7 +235,7 @@ public class Principal extends Application {
 		
 
 		VBox vbBusca = new VBox();
-		GridPane gridBusca = new GridPane();
+		final GridPane gridBusca = new GridPane();
 		gridBusca.setVgap(4);
 		gridBusca.setHgap(4);
 		gridBusca.setPadding(new Insets(5, 5, 5, 5));
@@ -247,7 +247,7 @@ public class Principal extends Application {
 		btBusca.setGraphic(imgBusca);
 		btBusca.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); 
 	
-		Button btDown = new Button();
+		final Button btDown = new Button();
 		btDown.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); 
 		ImageView imgD = new ImageView("File:img/down.png");
 		imgD.setFitHeight(24);
@@ -256,7 +256,8 @@ public class Principal extends Application {
 		
 		gridBusca.add(txtBusca, 1, 0);
 		gridBusca.add(btBusca, 2, 0);
-		
+		gridBusca.add(btDown, 3, 0);
+		btDown.setDisable(true);
 		vbBusca.getChildren().addAll(gridBusca,tabela3,tabela4);
 		vbBusca.setAlignment(Pos.CENTER);
 		
@@ -380,6 +381,7 @@ public class Principal extends Application {
 			public void handle(ActionEvent arg0) {
 				da.add(novo);
 				dados.add(new ArquivoTabela(novo.getNome(), novo.getTamanho()));
+			//	dados3.add(new ArquivoTabela(novo.getNome(), novo.getTamanho()));
 				st.getChildren().remove(anchorDown);
 				new Thread(new ClienteC(1024, 1, caminho2.getAbsolutePath(), fl)).start();;
 				
@@ -444,6 +446,29 @@ public class Principal extends Application {
 			}
 			
 		});
+		
+		tabela3.setOnMousePressed(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event arg0) {
+				// TODO Auto-generated method stub
+				dados2.clear();
+				int i =tabela3.getSelectionModel().getSelectedIndex();
+				if(i>=0){
+				DadosArquivo  info= da.get(i);
+				btDown.setDisable(false);
+				ArrayList<IpTabela>ips = new ArrayList<>();
+				for(String str : info.getIp()){
+					ips.add(new IpTabela(str));
+				}
+				dados2.addAll(ips);
+				}else{
+					btDown.setDisable(true);
+				}
+			}
+			
+		});
+		
 		
 		btBusca.setOnMouseClicked(new EventHandler<Event>() {
 
