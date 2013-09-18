@@ -25,6 +25,8 @@ import javax.management.ObjectInstance;
 import javax.swing.text.TabExpander;
 import javax.xml.bind.JAXBException;
 
+import br.ufmt.busca.Busca;
+import br.ufmt.busca.TrataXmlBusca;
 import br.ufmt.checksum.CheckSum;
 import br.ufmt.dados.DadosArquivo;
 import br.ufmt.dados.TrataXMLDados;
@@ -81,6 +83,7 @@ public class Principal extends Application {
 	DadosArquivo novo = new DadosArquivo();
 	ArrayList<DadosArquivo> da = new ArrayList<>();
 	final ObservableList<ArquivoTabela> dados = FXCollections.observableArrayList();
+	final ObservableList<ArquivoTabela> dados3 = FXCollections.observableArrayList();
 	final ObservableList<IpTabela> dados2 = FXCollections.observableArrayList();
 	@Override
 	public void start(final Stage stage) throws Exception {
@@ -211,7 +214,7 @@ public class Principal extends Application {
 		tabela3.setMinWidth(500);
 		tabela3.setMaxSize(500, 200);
 		tabela3.getColumns().addAll(coluna1,coluna2);
-		tabela3.setItems(dados);
+		tabela3.setItems(dados3);
 		
 		tabela4.setEditable(false);
 		tabela4.setMinWidth(200);
@@ -236,13 +239,14 @@ public class Principal extends Application {
 		gridBusca.setVgap(4);
 		gridBusca.setHgap(4);
 		gridBusca.setPadding(new Insets(5, 5, 5, 5));
-		TextField txtBusca = new TextField();
-		Button btBusca = new Button();
+		final TextField txtBusca = new TextField();
+		final Button btBusca = new Button();
 		ImageView imgBusca = new ImageView("File:img/search.png");
 		imgBusca.setFitHeight(24);
 		imgBusca.setFitWidth(24);
 		btBusca.setGraphic(imgBusca);
 		btBusca.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); 
+	
 		Button btDown = new Button();
 		btDown.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); 
 		ImageView imgD = new ImageView("File:img/down.png");
@@ -251,7 +255,7 @@ public class Principal extends Application {
 		btDown.setGraphic(imgD);
 		
 		gridBusca.add(txtBusca, 1, 0);
-		gridBusca.add(imgBusca, 2, 0);
+		gridBusca.add(btBusca, 2, 0);
 		
 		vbBusca.getChildren().addAll(gridBusca,tabela3,tabela4);
 		vbBusca.setAlignment(Pos.CENTER);
@@ -441,12 +445,29 @@ public class Principal extends Application {
 			
 		});
 		
-		btBusca.setOnAction(new EventHandler<ActionEvent>() {
-			
+		btBusca.setOnMouseClicked(new EventHandler<Event>() {
+
 			@Override
-			public void handle(ActionEvent arg0) {
+			public void handle(Event arg0) {
+				try {
 				// TODO Auto-generated method stub
-				
+				 Busca b = new Busca();
+				 b.setNome(txtBusca.getText());
+		 		 String stB = new TrataXmlBusca().criarXmlReq(b);
+		 		 System.out.println(stB);
+				} catch (JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		});
+		
+		
+		btDown.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event arg0) {
+				System.out.println("Teste");
 			}
 		});
 		vbCont.setAlignment(Pos.CENTER);
@@ -457,7 +478,7 @@ public class Principal extends Application {
 		st.getChildren().add(hbBaixar);
 		tbaixar.setContent(st);
 		tbusca.setContent(vbBusca);
-		tbusca.setDisable(true);
+	    tbusca.setDisable(true);
 		
 
 		Scene sc= new Scene(tb);
