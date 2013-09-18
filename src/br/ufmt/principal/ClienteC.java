@@ -8,16 +8,23 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.bind.JAXBException;
+
 import javafx.scene.control.TextArea;
+import br.ufmt.busca.Busca;
 import br.ufmt.checksum.CheckSum;
 import br.ufmt.dados.DadosArquivo;
 import br.ufmt.dados.TrataXMLDados;
+import br.ufmt.publica.Publica;
+import br.ufmt.publica.TrataXmlPlub;
 import br.ufmt.requisicao.RequisitaArquivo;
 import br.ufmt.requisicao.TrataXMLReq;
 
@@ -228,7 +235,7 @@ public class ClienteC implements Runnable {
 
 				int contador=0;
 				int tamanho=dados.getTamanho();
-
+				int tamanho2=dados.getTamanho();
 				String check=dados.getMd5();
 				int cont =0;
 				int qtd=32768;
@@ -269,7 +276,22 @@ public class ClienteC implements Runnable {
 				if(md5.equals(check)){
 					//publica
 					System.out.println("Arquivo Completo");
+					InetAddress addr;
+					try {
+						addr = InetAddress.getLocalHost();
+						Publica pb = new Publica();
+						pb.setNome(nome);
+						pb.setTamanho(tamanho2);
+						pb.setMd5(check);
+						pb.setIp(addr.getHostAddress());
+						String bff = new TrataXmlPlub().criaXmlPubl(pb); 
+						System.out.println(bff);
 
+					} catch (UnknownHostException | JAXBException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}else{
 
 					System.out.println("Erro");
