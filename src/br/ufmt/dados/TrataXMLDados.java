@@ -24,6 +24,8 @@ public class TrataXMLDados {
 		return arq;
 
 	}
+	
+
 
 	public TrataXMLDados() {
 		// TODO Auto-generated constructor stub
