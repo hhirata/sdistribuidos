@@ -7,7 +7,7 @@
     <xs:sequence>
       <xs:element name="nome" type="xs:string" minOccurs="0"/>
       <xs:element name="md5" type="xs:string" minOccurs="0"/>
-      <xs:element name="tamanho" type="xs:string" minOccurs="0"/>
+      <xs:element name="tamanho" type="xs:int" minOccurs="0"/>
       <xs:element name="ip" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>

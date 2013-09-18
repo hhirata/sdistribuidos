@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javafx.scene.control.TextArea;
 import br.ufmt.checksum.CheckSum;
 import br.ufmt.dados.DadosArquivo;
 import br.ufmt.dados.TrataXMLDados;
@@ -27,9 +28,8 @@ public class ClienteC implements Runnable {
 	private int modo=0;
 	private String caminho;
 	private File req;
-	
-	
-   
+
+
 	public ClienteC(int porta, int modo, String caminho, File req) {
 		super();
 		this.porta = porta;
@@ -219,75 +219,65 @@ public class ClienteC implements Runnable {
 			}
 			arquivo.close();*/
 			if(modo==1){
-				
-			DadosArquivo dados = new TrataXMLDados().le(req);
-			
-			ArrayList<String> ips = new ArrayList<>();
-			
-			ips=(ArrayList<String>) dados.getIp();
-		 
-			int contador=0;
-			int tamanho=Integer.parseInt(dados.getTamanho());
-			
-			String check=dados.getMd5();
-			int cont =0;
-			int qtd=32768;
-			byte[]bts = new byte[tamanho];
-	/*		int max = tamanho/qtd;
-			max++;
-			ExecutorService executor = Executors.newFixedThreadPool(max);*/
-		
-			RandomAccessFile arquivo = new RandomAccessFile(caminho+"\\"+dados.getNome(), "rw");
-			String nome = dados.getNome();
-				
-			while(tamanho > 0){
-				if(qtd>tamanho){
-					qtd=tamanho;
+
+				DadosArquivo dados = new TrataXMLDados().le(req);
+
+				ArrayList<String> ips = new ArrayList<>();
+
+				ips=(ArrayList<String>) dados.getIp();
+
+				int contador=0;
+				int tamanho=dados.getTamanho();
+
+				String check=dados.getMd5();
+				int cont =0;
+				int qtd=32768;
+				byte[]bts = new byte[tamanho];
+				RandomAccessFile arquivo = new RandomAccessFile(caminho+"\\"+dados.getNome(), "rw");
+				String nome = dados.getNome();
+
+				while(tamanho > 0){
+					if(qtd>tamanho){
+						qtd=tamanho;
+
+					}
+					String end= ips.get(contador);
+					RequisitaArquivo rq = new RequisitaArquivo();
+					rq.setNome(nome);
+					rq.setPosicao(cont);
+					rq.setTamanho(qtd);
+
+					String req = new TrataXMLReq().criarXmlReq(rq);
+					Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont,ips));
+					t.start();
+					t.join();
+					if(contador+1 <ips.size()){
+						contador++;
+					}
+					else{
+						contador=0;
+
+					}
+					cont= cont+qtd;
+					tamanho= tamanho- qtd;
 
 				}
-				String end= ips.get(contador);
-				RequisitaArquivo rq = new RequisitaArquivo();
-				rq.setNome(nome);
-				rq.setPosicao(cont);
-				rq.setTamanho(qtd);
-			
-				String req = new TrataXMLReq().criarXmlReq(rq);
-				Thread	t = new Thread(new ClienteCServerC(1024, end, req, arquivo,cont,ips));
-				t.start();
-				t.join();
-/*				Runnable work = new ClienteCServerC(1024, end, req, arquivo,cont,ips);
-				executor.execute(work);*/
-				if(contador+1 <ips.size()){
-					contador++;
+
+				arquivo.close();
+				CheckSum ck = new CheckSum(caminho+"\\"+nome);
+				String md5=ck.calculaMD5();
+				if(md5.equals(check)){
+					//publica
+					System.out.println("Arquivo Completo");
+
+				}else{
+
+					System.out.println("Erro");
+					System.out.println(md5);
 				}
-				else{
-					contador=0;
-
-				}
-				cont= cont+qtd;
-				tamanho= tamanho- qtd;
+			}else if(modo==2){
 
 			}
-/*			executor.shutdown();
-			//executor.awaitTermination(5L, TimeUnit.MINUTES);
-			while(!executor.isTerminated()){
-				
-			}
-*/
-			arquivo.close();
-			CheckSum ck = new CheckSum(caminho+"\\"+nome);
-			String md5=ck.calculaMD5();
-			if(md5.equals(check)){
-				//publica
-				System.out.println("Arquivo Completo");
-			}else{
-
-				System.out.println("Erro");
-				System.out.println(md5);
-			}
-		}else if(modo==2){
-			
-		}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
