@@ -141,7 +141,7 @@ public class ClienteCServerC implements Runnable {
 
 		try {
 			s = new Socket(endereco, porta);
-			s.setSoTimeout(20000);
+			s.setSoTimeout(60000);
 			ObjectOutputStream oo = new ObjectOutputStream(s.getOutputStream());
 			oo.writeObject(requisicao);
 			DataInputStream dt = new DataInputStream(s.getInputStream());
