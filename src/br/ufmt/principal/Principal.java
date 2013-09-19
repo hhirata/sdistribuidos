@@ -409,7 +409,7 @@ public class Principal extends Application {
 					System.out.println(bff);
 					Publica b2 = new TrataXmlPlub().Dados(bff);
 					System.out.println(b2.getIp());
-					Socket publicar = new Socket("192.168.11.77",1023);
+					Socket publicar = new Socket("10.10.0.155",1023);
 					ObjectOutputStream ob = new ObjectOutputStream(publicar.getOutputStream());
 					ob.writeObject(bff);
 					st.getChildren().remove(anchorUp);
