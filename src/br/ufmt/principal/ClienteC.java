@@ -384,7 +384,7 @@ public class ClienteC implements Runnable {
 				int tamanho2=dA.getTamanho();
 				String check=dA.getMd5();
 				int cont =0;
-				int qtd=32768;
+				int qtd=16384;
 				byte[]bts = new byte[tamanho];
 				RandomAccessFile arquivo = new RandomAccessFile(caminho+"\\"+dA.getNome(), "rw");
 				String nome = dA.getNome();
