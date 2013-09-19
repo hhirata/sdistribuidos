@@ -344,7 +344,7 @@ public class ClienteC implements Runnable {
 						pb.setIp(addr.getHostAddress());
 						String bff = new TrataXmlPlub().criaXmlPubl(pb); 
 						System.out.println(bff);
-						Socket publicar = new Socket("192.168.11.77",1023);
+						Socket publicar = new Socket("10.10.0.255",1023);
 						ObjectOutputStream ob = new ObjectOutputStream(publicar.getOutputStream());
 						ob.writeObject(bff);
 
@@ -359,7 +359,7 @@ public class ClienteC implements Runnable {
 					System.out.println(md5);
 				}
 			}else if(modo==2){
-				Socket s = new Socket("192.168.11.77",1023);
+				Socket s = new Socket("10.10.0.155",1023);
 				ObjectOutputStream ob = new ObjectOutputStream(s.getOutputStream());
 				ob.writeObject(busca);
 
@@ -432,7 +432,7 @@ public class ClienteC implements Runnable {
 						pb.setIp(addr.getHostAddress());
 						String bff = new TrataXmlPlub().criaXmlPubl(pb); 
 						System.out.println(bff);
-						Socket publicar = new Socket("192.168.11.77",1023);
+						Socket publicar = new Socket("10.10.0.255",1023);
 						ObjectOutputStream ob = new ObjectOutputStream(publicar.getOutputStream());
 						ob.writeObject(bff);
 
